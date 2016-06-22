@@ -13,10 +13,8 @@
 .project
 .settings
 target
+dl4jPerformance.csv
 build
 *.jpg
 *.t7
-run_time.txt
-run_time.csv
-TorchPerform.csv
 target/deeplearning4j-examples-0.4-rc0-SNAPSHOT-bin.jar
