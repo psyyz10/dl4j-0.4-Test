@@ -1,4 +1,5 @@
 import junit.framework.TestCase;
+import org.junit.Test;
 import performTest.ConvolutionTest;
 import performTest.MaxPoolingTest;
 
@@ -11,12 +12,13 @@ public class DL4JTest extends TestCase {
 //        ClassNLLCriterionTest.testForward();
 //        ClassNLLCriterionTest.testBackward();
 //    }
-
+    @Test
     public void testConvolutionTest() {
         ConvolutionTest.testForward();
         ConvolutionTest.testBackward();
     }
 
+    @Test
     public void testMaxPooling() {
         MaxPoolingTest.testForward();
         MaxPoolingTest.testBackward();
