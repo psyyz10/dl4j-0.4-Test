@@ -1,5 +1,4 @@
 import junit.framework.TestCase;
-import performTest.ClassNLLCriterionTest;
 import performTest.ConvolutionTest;
 import performTest.MaxPoolingTest;
 
