@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 /**
  * Created by yao on 6/13/16.
  */
+
 public class ConvolutionTest {
     static int forwardIterations = 10;
     static int backwardIterations = 10;
@@ -80,7 +81,7 @@ public class ConvolutionTest {
         org.deeplearning4j.nn.layers.convolution.ConvolutionLayer convolutionLayer =
                 (org.deeplearning4j.nn.layers.convolution.ConvolutionLayer)model.getLayer(0);
 
-    System.out.println(convolutionLayer.params());
+        System.out.println(convolutionLayer.params());
         System.out.println(convolutionLayer.preOutput(false));
     }
 

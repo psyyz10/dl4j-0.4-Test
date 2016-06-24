@@ -2024,3 +2024,47 @@ MaxPooling(3 3 2 2)  backward, 887.2559461000001
 MaxPooling(2 2 2 2)  backward, 782.8994018999999
 MaxPooling(3 3 1 1)  backward, 3468.6709115999997
 MaxPooling(3 3 3 3)  backward, 399.3550547
+Convolution(3 64 11 11 4 4 2 2 224 224)  forward, 54.6343699
+Convolution(64 192 5 5 1 1 2 2 25 25)  forward, 90.126888
+Convolution(191 384 3 3 1 1 1 1 12 12)  forward, 42.422614700000004
+Convolution(384 256 3 3 1 1 1 1 6 6)  forward, 16.4829737
+Convolution(256 256 3 3 1 1 1 1 3 3)  forward, 4.7672281
+Convolution(3 64 3 3 1 1 1 1 224 224)  forward, 155.531754
+Convolution(64 64 3 3 1 1 1 1 110 110)  forward, 403.62009720000003
+Convolution(64 128 3 3 1 1 1 1 54 54)  forward, 128.3444758
+Convolution(128 128 3 3 1 1 1 1 26 26)  forward, 59.0869962
+Convolution(128 256 3 3 1 1 1 1 13 13)  forward, 23.7430673
+Convolution(256 256 3 3 1 1 1 1 6 6)  forward, 11.3204055
+Convolution(256 512 3 3 1 1 1 1 3 3)  forward, 6.602887
+Convolution(512 512 3 3 1 1 1 1 2 2)  forward, 7.63237
+Convolution(3 64 7 7 2 2 3 3 224 224)  forward, 95.15885610000001
+Convolution(64 64 1 1 1 1 0 0 54 54)  forward, 32.8929647
+Convolution(64 192 3 3 1 1 1 1 27 27)  forward, 42.463784600000004
+Convolution(192 576 3 3 1 1 1 1 12 12)  forward, 57.9291469
+Convolution(576 576 2 2 2 2 0 0 4 4)  forward, 3.5906491000000003
+Convolution(3 64 11 11 4 4 2 2 224 224)  backward, 224.3143798
+Convolution(64 192 5 5 1 1 2 2 25 25)  backward, 327.8991838
+Convolution(191 384 3 3 1 1 1 1 12 12)  backward, 136.3189564
+Convolution(384 256 3 3 1 1 1 1 6 6)  backward, 50.9944579
+Convolution(256 256 3 3 1 1 1 1 3 3)  backward, 10.5666019
+Convolution(3 64 3 3 1 1 1 1 224 224)  backward, 3547.6313285999995
+Convolution(64 64 3 3 1 1 1 1 110 110)  backward, 1557.1372176999998
+Convolution(64 128 3 3 1 1 1 1 54 54)  backward, 547.1103266
+Convolution(128 128 3 3 1 1 1 1 26 26)  backward, 211.6551563
+Convolution(128 256 3 3 1 1 1 1 13 13)  backward, 78.2997687
+Convolution(256 256 3 3 1 1 1 1 6 6)  backward, 33.5996812
+Convolution(256 512 3 3 1 1 1 1 3 3)  backward, 17.9488654
+Convolution(512 512 3 3 1 1 1 1 2 2)  backward, 19.220039
+Convolution(3 64 7 7 2 2 3 3 224 224)  backward, 658.6355575
+Convolution(64 64 1 1 1 1 0 0 54 54)  backward, 151.76280260000001
+Convolution(64 192 3 3 1 1 1 1 27 27)  backward, 182.7262233
+Convolution(192 576 3 3 1 1 1 1 12 12)  backward, 188.7781283
+Convolution(576 576 2 2 2 2 0 0 4 4)  backward, 13.2889578
+MaxPooling(3 3 2 2)  forward, 166.2933488
+MaxPooling(2 2 2 2)  forward, 147.9950851
+MaxPooling(3 3 1 1)  forward, 625.3704211
+MaxPooling(3 3 3 3)  forward, 69.6016231
+MaxPooling(3 3 2 2)  backward, 967.5491761999999
+MaxPooling(2 2 2 2)  backward, 891.2499071
+MaxPooling(3 3 1 1)  backward, 3880.1953076
+MaxPooling(3 3 3 3)  backward, 451.28048939999996
