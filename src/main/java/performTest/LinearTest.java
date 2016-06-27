@@ -2,6 +2,8 @@ package performTest;
 
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.layers.factory.LayerFactories;
+import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.api.rng.DefaultRandom;
 import org.nd4j.linalg.factory.Nd4j;
@@ -12,6 +14,7 @@ import org.deeplearning4j.nn.conf.layers.RBM;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.lang.reflect.Method;
 
 /**
  * Created by yansh on 16-6-23.
@@ -33,36 +36,29 @@ public class LinearTest{
             new TestCase(28 * 4 * 4, 768)//, 28, 40)
     };
 
-    static INDArray input = Nd4j.rand(seed, inputNum);
-
     public static void testForward() {
         for (TestCase testCase : allTestCases) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("dl4jPerformance.csv"), true))) {
-                MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
-                        .seed(seed)
-                        .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
-                        .iterations(1)
-                        .learningRate(0.006)
-                        .updater(Updater.NESTEROVS).momentum(0.9)
-                        .regularization(true).l2(1e-4)
+                INDArray input = Nd4j.rand(inputNum,testCase.inputSize,seed);
+
+                MultiLayerConfiguration.Builder builder = new NeuralNetConfiguration.Builder()
                         .list()
-                        .layer(0, new RBM.Builder()
+                        .layer(0,new RBM.Builder()
                                 .nIn(testCase.inputSize)
                                 .nOut(testCase.outputSize)
                                 .visibleUnit(RBM.VisibleUnit.LINEAR)
-                                .build())
-                        .pretrain(false).backprop(true)
-                        .build();
-
-                NeuralNetConfiguration i1 = conf.getConf(0);
-
-                org.deeplearning4j.nn.layers.feedforward.rbm.RBM RBMLayer =
-                        new org.deeplearning4j.nn.layers.feedforward.rbm.RBM(i1, input);
-
+                                .build());
+                MultiLayerConfiguration conf = builder.build();
+                MultiLayerNetwork model = new MultiLayerNetwork(conf);
+                model.init();
+                model.setInput(input);
+                model.getLayer(0).setInput(input);
+                model.feedForward();
+                org.deeplearning4j.nn.api.Layer rbm = model.getLayer(0);
 
                 double start = System.nanoTime();
                 for (int i = 0; i < forwardIterations; i++) {
-                    RBMLayer.activate();
+                    rbm.activate();
                 }
                 double end = System.nanoTime();
                 double timeMillis = (end - start) / 1e6 /forwardIterations;
@@ -77,33 +73,32 @@ public class LinearTest{
     public static void testBackward(){
         for (TestCase testCase : allTestCases) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("dl4jPerformance.csv"), true))) {
-                MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
-                        .seed(seed)
-                        .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
-                        .iterations(1)
-                        .learningRate(0.006)
-                        .updater(Updater.NESTEROVS).momentum(0.9)
-                        .regularization(true).l2(1e-4)
+                INDArray input = Nd4j.rand(inputNum,testCase.inputSize,seed);
+
+                MultiLayerConfiguration.Builder builder = new NeuralNetConfiguration.Builder()
                         .list()
-                        .layer(0, new RBM.Builder()
+                        .layer(0,new RBM.Builder()
                                 .nIn(testCase.inputSize)
                                 .nOut(testCase.outputSize)
                                 .visibleUnit(RBM.VisibleUnit.LINEAR)
-                                .build())
-                        .pretrain(false).backprop(true)
-                        .build();
+                                .build());
+                MultiLayerConfiguration conf = builder.build();
+                MultiLayerNetwork model = new MultiLayerNetwork(conf);
+                model.init();
+                model.setInput(input);
+                model.getLayer(0).setInput(input);
+                model.feedForward();
+                org.deeplearning4j.nn.api.Layer rbm = model.getLayer(0);
 
-                NeuralNetConfiguration i1 = conf.getConf(0);
-
-                org.deeplearning4j.nn.layers.feedforward.rbm.RBM RBMLayer =
-                        new org.deeplearning4j.nn.layers.feedforward.rbm.RBM(i1, input);
-
-                INDArray output = RBMLayer.activate();
-                INDArray epsilon = Nd4j.rand(seed, output.size(0));
+                INDArray output = rbm.activate();
+                INDArray epsilon = Nd4j.rand(output.size(0), output.size(1), seed);
+                Method initGradientView = model.getClass().getDeclaredMethod("initGradientsView");
+                initGradientView.setAccessible(true);
+                initGradientView.invoke(model);
 
                 double start = System.nanoTime();
                 for (int i = 0; i < backwardIterations; i++) {
-                    RBMLayer.backpropGradient(epsilon);
+                    rbm.backpropGradient(epsilon);
                 }
                 double end = System.nanoTime();
                 double timeMillis = (end - start) / 1e6 /backwardIterations;

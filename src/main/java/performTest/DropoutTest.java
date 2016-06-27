@@ -2,8 +2,8 @@ package performTest;
 
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
-import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.layers.BaseLayer;
+import org.deeplearning4j.nn.layers.factory.LayerFactories;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.api.rng.DefaultRandom;
 import org.nd4j.linalg.factory.Nd4j;
@@ -13,6 +13,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
  * Created by yansh on 16-6-23.
@@ -26,7 +27,7 @@ public class DropoutTest {
     static DefaultRandom generator = new DefaultRandom(seed);
     static double[] allTestCases = {0.3,0.4,0.5};
 
-    public static INDArray input = Nd4j.rand(InputNum,FeatureDim);
+    public static INDArray input = Nd4j.rand(FeatureDim,InputNum,seed);
 
     public static void testForward(){
         for(double testCase : allTestCases){
@@ -34,23 +35,25 @@ public class DropoutTest {
                 MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                         .dropOut(0.5)
                         .list()
-                        .layer(0, new OutputLayer.Builder().build())
+                        .layer(0, new org.deeplearning4j.nn.conf.layers.RBM.Builder()
+                                .nIn(InputNum)
+                                .nOut(FeatureDim)
+                                .build())
                         .build();
-
-                MultiLayerNetwork net = new MultiLayerNetwork(conf);
-                net.init();
 
                 Field dropoutMaskField = BaseLayer.class.getDeclaredField("dropoutMask");
                 dropoutMaskField.setAccessible(true);
 
                 NeuralNetConfiguration i1 = conf.getConf(0);
 
-                org.deeplearning4j.nn.layers.OutputLayer outputLayer =
-                        new org.deeplearning4j.nn.layers.OutputLayer(i1, input);
+                int numParams = LayerFactories.getFactory(i1).initializer().numParams(i1,true);
+                INDArray params = Nd4j.create(1, numParams);
+                org.deeplearning4j.nn.layers.feedforward.rbm.RBM rbm = LayerFactories.getFactory(i1).create(i1,null,0,params);
+                rbm.fit(input);
 
                 double start = System.nanoTime();
                 for (int i = 0; i < forwardIterations; i++) {
-                    outputLayer.activate();
+                    rbm.activate();
                 }
                 double end = System.nanoTime();
                 double timeMillis = (end - start) / 1e6 /forwardIterations;
@@ -68,26 +71,31 @@ public class DropoutTest {
                 MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                         .dropOut(0.5)
                         .list()
-                        .layer(0, new OutputLayer.Builder().build())
+                        .layer(0, new org.deeplearning4j.nn.conf.layers.RBM.Builder()
+                                .nIn(InputNum)
+                                .nOut(FeatureDim)
+                                .build())
                         .build();
-
-                MultiLayerNetwork net = new MultiLayerNetwork(conf);
-                net.init();
 
                 Field dropoutMaskField = BaseLayer.class.getDeclaredField("dropoutMask");
                 dropoutMaskField.setAccessible(true);
 
-                NeuralNetConfiguration i1 = conf.getConf(0);
+                MultiLayerNetwork model = new MultiLayerNetwork(conf);
+                model.init();
+                model.setInput(input);
+                model.getLayer(0).setInput(input);
+                model.feedForward();
+                org.deeplearning4j.nn.api.Layer rbm = model.getLayer(0);
+                INDArray output = rbm.activate();
+                INDArray epsilon = Nd4j.rand(output.size(0), output.size(1),seed);
 
-                org.deeplearning4j.nn.layers.OutputLayer outputLayer =
-                        new org.deeplearning4j.nn.layers.OutputLayer(i1, input);
-
-                INDArray output = outputLayer.activate();
-                INDArray epsilon = Nd4j.rand(seed, output.size(0), output.size(1));
+                Method initGradientView = model.getClass().getDeclaredMethod("initGradientsView");
+                initGradientView.setAccessible(true);
+                initGradientView.invoke(model);
 
                 double start = System.nanoTime();
                 for (int i = 0; i < backwardIterations; i++) {
-                    outputLayer.backpropGradient(epsilon);
+                    rbm.backpropGradient(epsilon);
                 }
                 double end = System.nanoTime();
                 double timeMillis = (end - start) / 1e6 /backwardIterations;
@@ -97,5 +105,10 @@ public class DropoutTest {
                 ex.printStackTrace();
             }
         }
+    }
+
+    public static void main(String[] args){
+        testForward();
+        testBackward();
     }
 }

@@ -11,8 +11,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 
-//import org.deeplearning4j.nn.layers.convolution.subsampling;
-
 
 /**
  * Created by yao on 6/7/16.

@@ -154,8 +154,6 @@ public class ConvolutionTest {
                 initGradientView.setAccessible(true);
                 initGradientView.invoke(model);
 
-
-
                 double start = System.nanoTime();
                 for (int i = 0; i < backwardIterations; i++) {
                     convolutionLayer.backpropGradient(epsilon);

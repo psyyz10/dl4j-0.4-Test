@@ -20,6 +20,7 @@ public class DL4JTest extends TestCase {
         ClassNLLCriterionTest.testForward();
         ClassNLLCriterionTest.testBackward();
     }
+
     @Test
     public void testConvolutionTest() {
         ConvolutionTest.testForward();
@@ -52,16 +53,16 @@ public class DL4JTest extends TestCase {
 
     @Test
     public void testReLU() {
-        ReLUTest.iptestForward();
-        ReLUTest.iptestBackward();
         ReLUTest.niptestForward();
         ReLUTest.niptestBackward();
+        ReLUTest.iptestForward();
+        ReLUTest.iptestBackward();
     }
 
     @Test
     public void testDropout() {
         DropoutTest.testForward();
-        DropoutTest.testBackward();
+       // DropoutTest.testBackward();
     }
 
 }
