@@ -1,21 +1,18 @@
 package performTest;
 
-import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
-
-import org.deeplearning4j.nn.conf.layers.RBM;
-import org.deeplearning4j.nn.layers.factory.LayerFactories;
+import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.api.rng.DefaultRandom;
 import org.nd4j.linalg.factory.Nd4j;
-import org.nd4j.linalg.lossfunctions.LossFunctions;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.lang.reflect.Method;
+
+import org.deeplearning4j.nn.layers.ActivationLayer;
 
 /**
  * Created by yansh on 16-6-23.
@@ -27,17 +24,16 @@ public class ReLUTest {
     static int inputNum = 100;
     static int featureNum = 512;
     static int seed = 100;
-    static DefaultRandom generator = new DefaultRandom(seed);
 
-    static INDArray input = Nd4j.rand(featureNum,inputNum);
+    static INDArray input = Nd4j.rand(featureNum,inputNum,seed);
+    static INDArray epsilon = Nd4j.rand(featureNum,featureNum,seed);
 
-    static INDArray epsilon = Nd4j.rand(featureNum,featureNum);
-
-    public static void iptestForward(){
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("dl4jPerformance.csv"), true))) {
+    private static ActivationLayer setupipLayer(){
+        try{
             MultiLayerConfiguration.Builder builder = new NeuralNetConfiguration.Builder()
                     .list()
-                    .layer(0,new RBM.Builder()
+                    .layer(0, new DenseLayer.Builder().nIn(inputNum).nOut(featureNum).activation("relu").build())
+                    .layer(1,new org.deeplearning4j.nn.conf.layers.ActivationLayer.Builder()
                             .activation("relu")
                             .nIn(inputNum)
                             .nOut(featureNum)
@@ -46,15 +42,58 @@ public class ReLUTest {
             MultiLayerNetwork model = new MultiLayerNetwork(conf);
             model.init();
             model.setInput(input);
-            model.getLayer(0).setInput(input);
-            model.feedForward();
+            model.getLayer(1).setInput(input);
+            //// TODO: 16-6-29 in place 
             INDArray params = model.params();
             model.setParams(params);
-            org.deeplearning4j.nn.api.Layer rbm = model.getLayer(0);
+            model.feedForward();
+            Method initGradientView = model.getClass().getDeclaredMethod("initGradientsView");
+            initGradientView.setAccessible(true);
+            initGradientView.invoke(model);
+
+            ActivationLayer ActivationLayer = (ActivationLayer) model.getLayer(1);
+            return ActivationLayer;
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    private static ActivationLayer setupnipLayer(){
+        try{
+        MultiLayerConfiguration.Builder builder = new NeuralNetConfiguration.Builder()
+                .list()
+                .layer(0, new DenseLayer.Builder().nIn(inputNum).nOut(featureNum).activation("relu").build())
+                .layer(1,new org.deeplearning4j.nn.conf.layers.ActivationLayer.Builder()
+                        .activation("relu")
+                        .nIn(inputNum)
+                        .nOut(featureNum)
+                        .build());
+        MultiLayerConfiguration conf = builder.build();
+        MultiLayerNetwork model = new MultiLayerNetwork(conf);
+        model.init();
+        model.setInput(input);
+        model.getLayer(1).setInput(input);
+        model.feedForward();
+        Method initGradientView = model.getClass().getDeclaredMethod("initGradientsView");
+        initGradientView.setAccessible(true);
+        initGradientView.invoke(model);
+
+        ActivationLayer ActivationLayer = (ActivationLayer) model.getLayer(1);
+            return ActivationLayer;
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public static void iptestForward(){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("dl4jPerformance.csv"), true))) {
+            ActivationLayer ActivationLayer = setupipLayer();
 
             double start = System.nanoTime();
             for (int i = 0; i < forwardIterations; i++) {
-                rbm.activate();
+                ActivationLayer.activate(false);
             }
             double end = System.nanoTime();
             double timeMillis = (end - start) / 1e6 /forwardIterations;
@@ -67,25 +106,11 @@ public class ReLUTest {
 
     public static void niptestForward(){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("dl4jPerformance.csv"), true))) {
-            org.deeplearning4j.nn.conf.layers.RBM cnn = new org.deeplearning4j.nn.conf.layers.RBM.Builder()
-                    .activation("relu")
-                    .nIn(inputNum)
-                    .nOut(featureNum)
-                    .build();
-
-            NeuralNetConfiguration conf = new NeuralNetConfiguration.Builder()
-                    .seed(seed)
-                    .layer(cnn)
-                    .build();
-
-            int numParams = LayerFactories.getFactory(conf).initializer().numParams(conf,true);
-            INDArray params = Nd4j.create(1, numParams);
-            org.deeplearning4j.nn.layers.feedforward.rbm.RBM rbm = LayerFactories.getFactory(conf).create(conf,null,0,params);
-            rbm.fit(input);
+            ActivationLayer ActivationLayer = setupnipLayer();
 
             double start = System.nanoTime();
             for (int i = 0; i < forwardIterations; i++) {
-                rbm.activate();
+                ActivationLayer.activate(false);
             }
             double end = System.nanoTime();
             double timeMillis = (end - start) / 1e6 /forwardIterations;
@@ -98,31 +123,11 @@ public class ReLUTest {
 
     public static void iptestBackward(){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("dl4jPerformance.csv"), true))) {
-            MultiLayerConfiguration.Builder builder = new NeuralNetConfiguration.Builder()
-                    .list()
-                    .layer(0,new RBM.Builder()
-                            .activation("relu")
-                            .nIn(inputNum)
-                            .nOut(featureNum)
-                            .build());
-            MultiLayerConfiguration conf = builder.build();
-            MultiLayerNetwork model = new MultiLayerNetwork(conf);
-            model.init();
-            model.setInput(input);
-            model.getLayer(0).setInput(input);
-            INDArray params = model.params();
-            model.setParams(params);
-            //model.feedForward();
-
-            org.deeplearning4j.nn.api.Layer rbm = model.getLayer(0);
-
-            Method initGradientView = model.getClass().getDeclaredMethod("initGradientsView");
-            initGradientView.setAccessible(true);
-            initGradientView.invoke(model);
+            ActivationLayer ActivationLayer = setupipLayer();
 
             double start = System.nanoTime();
             for (int i = 0; i < backwardIterations; i++) {
-                rbm.backpropGradient(epsilon);
+                ActivationLayer.backpropGradient(epsilon);
             }
             double end = System.nanoTime();
             double timeMillis = (end - start) / 1e6 /backwardIterations;
@@ -136,29 +141,11 @@ public class ReLUTest {
 
     public static void niptestBackward(){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("dl4jPerformance.csv"), true))) {
-            MultiLayerConfiguration.Builder builder = new NeuralNetConfiguration.Builder()
-                    .list()
-                    .layer(0,new RBM.Builder()
-                            .activation("relu")
-                            .nIn(inputNum)
-                            .nOut(featureNum)
-                            .build());
-            MultiLayerConfiguration conf = builder.build();
-            MultiLayerNetwork model = new MultiLayerNetwork(conf);
-            model.init();
-            model.setInput(input);
-            model.getLayer(0).setInput(input);
-
-            //model.feedForward();
-            org.deeplearning4j.nn.api.Layer rbm = model.getLayer(0);
-
-            Method initGradientView = model.getClass().getDeclaredMethod("initGradientsView");
-            initGradientView.setAccessible(true);
-            initGradientView.invoke(model);
+            ActivationLayer ActivationLayer = setupnipLayer();
 
             double start = System.nanoTime();
             for (int i = 0; i < backwardIterations; i++) {
-                rbm.backpropGradient(epsilon);
+                ActivationLayer.backpropGradient(epsilon);
             }
             double end = System.nanoTime();
             double timeMillis = (end - start) / 1e6 /backwardIterations;
@@ -174,7 +161,6 @@ public class ReLUTest {
         niptestBackward();
         iptestForward();
         iptestBackward();
-
     }
 
 }

@@ -54,6 +54,7 @@ public class LinearTest{
                 model.setInput(input);
                 model.getLayer(0).setInput(input);
                 model.feedForward();
+
                 org.deeplearning4j.nn.api.Layer rbm = model.getLayer(0);
 
                 double start = System.nanoTime();
