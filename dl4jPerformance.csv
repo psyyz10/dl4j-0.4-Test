@@ -78,3 +78,72 @@ ReLU(nip) forward, 3.0781694
 ReLU(nip) backward, 1.8421907999999998
 ReLU(ip) forward, 0.1920225
 ReLU(ip) backward, 2.3355516
+BCECriterion forward, 4.8201934
+BCECriterion backward, 10.9249815
+Convolution(3 64 11 11 4 4 2 2 224 224)  forward, 53.7726045
+Convolution(64 192 5 5 1 1 2 2 25 25)  forward, 91.4743546
+Convolution(191 384 3 3 1 1 1 1 12 12)  forward, 41.453815
+Convolution(384 256 3 3 1 1 1 1 6 6)  forward, 15.939715699999999
+Convolution(256 256 3 3 1 1 1 1 3 3)  forward, 4.2946606
+Convolution(3 64 3 3 1 1 1 1 224 224)  forward, 135.4878586
+Convolution(64 64 3 3 1 1 1 1 110 110)  forward, 399.396737
+Convolution(64 128 3 3 1 1 1 1 54 54)  forward, 144.3833483
+Convolution(128 128 3 3 1 1 1 1 26 26)  forward, 73.2841894
+Convolution(128 256 3 3 1 1 1 1 13 13)  forward, 25.4995417
+Convolution(256 256 3 3 1 1 1 1 6 6)  forward, 11.4014019
+Convolution(256 512 3 3 1 1 1 1 3 3)  forward, 7.633661200000001
+Convolution(512 512 3 3 1 1 1 1 2 2)  forward, 6.3810685
+Convolution(3 64 7 7 2 2 3 3 224 224)  forward, 101.01951749999999
+Convolution(64 64 1 1 1 1 0 0 54 54)  forward, 35.6067064
+Convolution(64 192 3 3 1 1 1 1 27 27)  forward, 45.0691091
+Convolution(192 576 3 3 1 1 1 1 12 12)  forward, 59.8033247
+Convolution(576 576 2 2 2 2 0 0 4 4)  forward, 4.904907
+Convolution(3 64 11 11 4 4 2 2 224 224)  backward, 230.12469259999997
+Convolution(64 192 5 5 1 1 2 2 25 25)  backward, 298.2272901
+Convolution(191 384 3 3 1 1 1 1 12 12)  backward, 133.82148790000002
+Convolution(384 256 3 3 1 1 1 1 6 6)  backward, 48.8717967
+Convolution(256 256 3 3 1 1 1 1 3 3)  backward, 11.1420866
+Convolution(3 64 3 3 1 1 1 1 224 224)  backward, 3360.4680206999997
+Convolution(64 64 3 3 1 1 1 1 110 110)  backward, 1535.7961541
+Convolution(64 128 3 3 1 1 1 1 54 54)  backward, 563.7790377
+Convolution(128 128 3 3 1 1 1 1 26 26)  backward, 200.6678588
+Convolution(128 256 3 3 1 1 1 1 13 13)  backward, 80.24123349999999
+Convolution(256 256 3 3 1 1 1 1 6 6)  backward, 33.5090833
+Convolution(256 512 3 3 1 1 1 1 3 3)  backward, 19.0726329
+Convolution(512 512 3 3 1 1 1 1 2 2)  backward, 18.231032
+Convolution(3 64 7 7 2 2 3 3 224 224)  backward, 659.8221118
+Convolution(64 64 1 1 1 1 0 0 54 54)  backward, 145.7271429
+Convolution(64 192 3 3 1 1 1 1 27 27)  backward, 158.2924726
+Convolution(192 576 3 3 1 1 1 1 12 12)  backward, 187.3486243
+Convolution(576 576 2 2 2 2 0 0 4 4)  backward, 11.4698399
+ReLU(nip) forward, 0.0321496
+ReLU(nip) backward, 1.3675001
+ReLU(ip) forward, 0.6603928
+ReLU(ip) backward, 1.7895435
+BatchNormalization forward, 17.6637034
+BatchNormalization backward, 4.3221031000000005
+MaxPooling(3 3 2 2)  forward, 168.4101015
+MaxPooling(2 2 2 2)  forward, 146.18403089999998
+MaxPooling(3 3 1 1)  forward, 668.2866712
+MaxPooling(3 3 3 3)  forward, 69.98619310000001
+MaxPooling(3 3 2 2)  backward, 1013.1193369
+MaxPooling(2 2 2 2)  backward, 896.2499295
+MaxPooling(3 3 1 1)  backward, 3912.0005928
+MaxPooling(3 3 3 3)  backward, 457.21689530000003
+ClassNLLCriterion forward, 6.1530713
+ClassNLLCriterion backward, 19.916415
+Linear(9216 4096) forward, 166.965961
+Linear(4096 4096) forward, 80.4349368
+Linear(6400 128) forward, 4.4527293
+Linear(512 512) forward, 3.6526528
+Linear(512 10) forward, 0.5461301
+Linear(448 768) forward, 3.2521437
+Linear(9216 4096) backward, 476.32455300000004
+Linear(4096 4096) backward, 223.3855015
+Linear(6400 128) backward, 12.9622154
+Linear(512 512) backward, 6.8371016
+Linear(512 10) backward, 0.41885199999999995
+Linear(448 768) backward, 5.9727035
+Dropout(0.3)  forward, 10.4499702
+Dropout(0.4)  forward, 8.5454768
+Dropout(0.5)  forward, 9.18379

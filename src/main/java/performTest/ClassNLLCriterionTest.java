@@ -1,13 +1,7 @@
 package performTest;
 
-import org.deeplearning4j.nn.api.Layer;
-import org.deeplearning4j.nn.conf.GradientNormalization;
-import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
-import org.deeplearning4j.nn.conf.layers.BatchNormalization;
 import org.deeplearning4j.nn.layers.OutputLayer;
 import org.deeplearning4j.nn.layers.factory.LayerFactories;
-import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
-import org.deeplearning4j.nn.params.BatchNormalizationParamInitializer;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.nd4j.linalg.factory.Nd4j;
@@ -16,11 +10,6 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.Before;
 
 /**
  * Created by yansh on 16-6-23.
@@ -35,11 +24,6 @@ public class ClassNLLCriterionTest {
     static int seed = 100;
     static INDArray input = Nd4j.rand(inputNum, featureDim,seed);
     static INDArray target = Nd4j.rand(inputNum,inputNum,seed);
-
-    @Before
-    public void doBefore(){
-        Nd4j.getRandom().setSeed(seed);
-    }
 
     private static OutputLayer setupLayer(){
         NeuralNetConfiguration conf = new NeuralNetConfiguration.Builder()
