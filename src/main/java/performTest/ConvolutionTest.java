@@ -122,7 +122,6 @@ public class ConvolutionTest {
         }
     }
 
-
     public static void testBackward(){
         for (TestCase testCase : allTestCases) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("dl4jPerformance.csv"), true))) {

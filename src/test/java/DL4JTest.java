@@ -35,8 +35,8 @@ public class DL4JTest extends TestCase {
 
     @Test
     public void testLinear() {
-        LinearTest.testForward();
-        LinearTest.testBackward();
+        //LinearTest.testForward();
+        //LinearTest.testBackward();
     }
 
     @Test
@@ -53,16 +53,14 @@ public class DL4JTest extends TestCase {
 
     @Test
     public void testReLU() {
-        ReLUTest.niptestForward();
-        ReLUTest.niptestBackward();
-        ReLUTest.iptestForward();
-        ReLUTest.iptestBackward();
+        ReLUTest.testForward();
+        ReLUTest.testBackward();
     }
 
     @Test
     public void testDropout() {
         DropoutTest.testForward();
-       // DropoutTest.testBackward();
+        DropoutTest.testBackward();
     }
 
 }

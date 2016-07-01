@@ -1,7 +1,6 @@
 package performTest;
 
 import org.deeplearning4j.nn.layers.OutputLayer;
-import org.deeplearning4j.nn.conf.GradientNormalization;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -25,17 +24,16 @@ public class BCECriterionTest {
     static int featureDim = 512;
     static int seed = 100;
 
-    static INDArray input = Nd4j.rand(featureDim,inputNum);
-    static INDArray target = Nd4j.rand(featureDim,inputNum);
+    static INDArray input = Nd4j.rand(featureDim,inputNum,seed);
+    static INDArray target = Nd4j.rand(featureDim,featureDim,seed);
 
     private static OutputLayer setupLayer(){
-        org.deeplearning4j.nn.conf.layers.OutputLayer bce =
-                new org.deeplearning4j.nn.conf.layers.OutputLayer.Builder(LossFunctions.LossFunction.XENT)
-                        .nIn(inputNum).nOut(featureDim)
-                        .build();
         NeuralNetConfiguration conf = new NeuralNetConfiguration.Builder()
                 .seed(seed)
-                .layer(bce)
+                .layer(new org.deeplearning4j.nn.conf.layers.OutputLayer.Builder(LossFunctions.LossFunction.XENT)
+                        .nIn(inputNum)
+                        .nOut(featureDim)
+                        .build())
                 .build();
 
         int numParams = LayerFactories.getFactory(conf).initializer().numParams(conf,true);
@@ -46,6 +44,7 @@ public class BCECriterionTest {
         return outputLayer;
     }
 
+    //not in use
     private static OutputLayer setupMulLayer(){
         try{
             org.deeplearning4j.nn.conf.layers.OutputLayer bce =
@@ -80,10 +79,11 @@ public class BCECriterionTest {
     public static void testForward(){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("dl4jPerformance.csv"), true))) {
             OutputLayer outputLayer = setupLayer();
-// TODO: 16-6-29 target
+            outputLayer.fit(input,target);
+
             double start = System.nanoTime();
             for (int i = 0; i < forwardIterations; i++) {
-                outputLayer.preOutput(target);
+                outputLayer.preOutput(input);
             }
             double end = System.nanoTime();
             double timeMillis = (end - start) / 1e6 /forwardIterations;
@@ -96,12 +96,13 @@ public class BCECriterionTest {
     public static void testBackward(){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("dl4jPerformance.csv"), true))) {
             OutputLayer outputLayer = setupLayer();
-            INDArray output = outputLayer.activate(input);
-            outputLayer.fit(input,output);
+            outputLayer.fit(input,target);
+            INDArray output = outputLayer.activate();
+            INDArray epsilon = Nd4j.rand(output.size(0), output.size(1),seed );
 
             double start = System.nanoTime();
             for (int i = 0; i < backwardIterations; i++) {
-                outputLayer.backpropGradient(target);
+                outputLayer.backpropGradient(epsilon);
             }
             double end = System.nanoTime();
             double timeMillis = (end - start) / 1e6 /backwardIterations;
