@@ -1,6 +1,5 @@
 package performTest;
 
-import org.deeplearning4j.nn.api.Layer;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.layers.ConvolutionLayer;
@@ -8,7 +7,6 @@ import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.api.rng.DefaultRandom;
 import org.nd4j.linalg.factory.Nd4j;
-import org.deeplearning4j.nn.layers.*;
 import org.nd4j.linalg.util.ArrayUtil;
 
 import java.io.BufferedWriter;
@@ -19,6 +17,7 @@ import java.lang.reflect.Method;
 /**
  * Created by yao on 6/13/16.
  */
+
 public class ConvolutionTest {
     static int forwardIterations = 10;
     static int backwardIterations = 10;
@@ -80,7 +79,7 @@ public class ConvolutionTest {
         org.deeplearning4j.nn.layers.convolution.ConvolutionLayer convolutionLayer =
                 (org.deeplearning4j.nn.layers.convolution.ConvolutionLayer)model.getLayer(0);
 
-    System.out.println(convolutionLayer.params());
+        System.out.println(convolutionLayer.params());
         System.out.println(convolutionLayer.preOutput(false));
     }
 
@@ -123,7 +122,6 @@ public class ConvolutionTest {
         }
     }
 
-
     public static void testBackward(){
         for (TestCase testCase : allTestCases) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("dl4jPerformance.csv"), true))) {
@@ -152,8 +150,6 @@ public class ConvolutionTest {
                 Method initGradientView = model.getClass().getDeclaredMethod("initGradientsView");
                 initGradientView.setAccessible(true);
                 initGradientView.invoke(model);
-
-
 
                 double start = System.nanoTime();
                 for (int i = 0; i < backwardIterations; i++) {
