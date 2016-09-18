@@ -18,7 +18,7 @@ import java.io.FileWriter;
 
 public class ClassNLLCriterionTest {
 
-    static int forwardIterations = 10;
+ /*   static int forwardIterations = 10;
     static int backwardIterations = 10;
     static int inputNum = 512;
     static int featureDim = 512;
@@ -86,5 +86,5 @@ public class ClassNLLCriterionTest {
     public static void main(String[] args){
         testForward();
         testBackward();
-    }
+    }*/
 }

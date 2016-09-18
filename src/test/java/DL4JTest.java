@@ -15,7 +15,7 @@ import performTest.ReLUTest;
  */
 
 public class DL4JTest extends TestCase {
-    @Test
+    /*@Test
     public void testClassNLLCriterion(){
         ClassNLLCriterionTest.testForward();
         ClassNLLCriterionTest.testBackward();
@@ -61,6 +61,6 @@ public class DL4JTest extends TestCase {
     public void testDropout() {
         DropoutTest.testForward();
         DropoutTest.testBackward();
-    }
+    }*/
 
 }

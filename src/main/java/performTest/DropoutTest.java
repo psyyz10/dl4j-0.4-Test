@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
  * Created by yansh on 16-6-23.
  */
 public class DropoutTest {
-    static int forwardIterations = 10;
+   /* static int forwardIterations = 10;
     static int backwardIterations = 10;
     static int InputNum = 100;
     static int FeatureDim = 512;
@@ -124,5 +124,5 @@ public class DropoutTest {
     public static void main(String[] args){
         testForward();
         testBackward();
-    }
+    }*/
 }

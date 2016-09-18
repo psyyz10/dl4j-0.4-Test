@@ -18,7 +18,7 @@ import java.util.Map;
  */
 
 public class BatchNormalizationTest {
-    static int forwardIterations = 10;
+    /*&static int forwardIterations = 10;
     static int backwardIterations = 10;
     static int inputNum = 100;
     static int featureDim = 512;
@@ -89,5 +89,5 @@ public class BatchNormalizationTest {
     public static void main(String[] args){
         testForward();
         testBackward();
-    }
+    }*/
 }
