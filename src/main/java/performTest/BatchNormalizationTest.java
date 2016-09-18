@@ -1,6 +1,6 @@
 package performTest;
 
-import org.deeplearning4j.nn.layers.factory.LayerFactories;
+/*import org.deeplearning4j.nn.layers.factory.LayerFactories;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.params.BatchNormalizationParamInitializer;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -11,7 +11,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Map;*/
 
 /**
  * Created by yansh on 16-6-23.

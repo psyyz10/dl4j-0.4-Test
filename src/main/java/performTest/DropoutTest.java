@@ -1,6 +1,6 @@
 package performTest;
 
-import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
+/*import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.layers.*;
 import org.deeplearning4j.nn.layers.factory.LayerFactories;
@@ -13,7 +13,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.lang.reflect.Method;*/
 
 /**
  * Created by yansh on 16-6-23.

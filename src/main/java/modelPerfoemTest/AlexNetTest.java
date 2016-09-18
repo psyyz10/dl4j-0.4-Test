@@ -24,8 +24,8 @@ import java.io.FileWriter;
 
 public class AlexNetTest {
 
-    private static int height;
-    private static int width;
+    private static int height = 224;
+    private static int width = 224;
     private static int channels = 3;
     private static int outputNum = 1000;
     private static long seed = 123;
@@ -138,14 +138,13 @@ public class AlexNetTest {
 
     static int forwardIterations = 10;
     static int backwardIterations = 10;
-    static int inputNum = 100;
-    static int featureDim = 512;
     static MultiLayerNetwork model = init();
-    static INDArray input = Nd4j.rand(1,8,3,224,224).max(100).min(0).sub(100);
-    static INDArray label = Nd4j.rand(1,8).max(100).min(0);
+    static INDArray label = Nd4j.rand(100,8,3,224,224);//.max(100).min(0);//
 
     public static void testForward(){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("dl4jPerformance.csv"), true))) {
+            INDArray input = Nd4j.rand(100,8,3,224,224);//.max(100).min(0).sub(100);
+            model.setInput(input);
             double start = System.nanoTime();
             for (int i = 0; i < forwardIterations; i++) {
                 model.preOutput(input);
@@ -161,11 +160,11 @@ public class AlexNetTest {
 
     public  static void testBackward(){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("dl4jPerformance.csv"), true))) {
-            //INDArray output = model.preOutput(input);
 
+            INDArray epsilon = Nd4j.rand(100, 8,3,224,224);
             double start = System.nanoTime();
             for (int i = 0; i < backwardIterations; i++) {
-                model.backpropGradient(label);
+                model.backpropGradient(epsilon);
             }
             double end = System.nanoTime();
             double timeMillis = (end - start) / 1e6 /backwardIterations;

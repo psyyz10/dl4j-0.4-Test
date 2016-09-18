@@ -1,6 +1,6 @@
 package performTest;
 
-import com.sun.org.apache.bcel.internal.generic.FLOAD;
+/*import com.sun.org.apache.bcel.internal.generic.FLOAD;
 import org.deeplearning4j.nn.layers.OutputLayer;
 import org.deeplearning4j.nn.layers.factory.LayerFactories;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -10,7 +10,7 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileWriter;*/
 
 /**
  * Created by yansh on 16-6-23.
