@@ -137,14 +137,15 @@ public class AlexNetTest {
         return model;
     }
 
-    static int forwardIterations = 10;
-    static int backwardIterations = 10;
+    static int forwardIterations = 5;
+    static int backwardIterations = 5;
     static MultiLayerNetwork model = init();
-    static INDArray label = Nd4j.rand(100,8);//.max(100).min(0);//
+    static int inputsize = 256;
+    static INDArray label = Nd4j.rand(seed,inputsize);//.max(100).min(0);//
 
     public static void testForward(){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("dl4jPerformance.csv"), true))) {
-            INDArray input = Nd4j.rand(100,8,3,224,224);//.max(100).min(0).sub(100);
+            INDArray input = Nd4j.rand(seed,inputsize,channels,height,width);//.max(100).min(0).sub(100);
             model.setInput(input);
             model.setLabels(label);
             double start = System.nanoTime();
@@ -164,8 +165,8 @@ public class AlexNetTest {
 
     public  static void testBackward(){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("dl4jPerformance.csv"), true))) {
-            INDArray input = Nd4j.rand(100,8,3,224,224);//.max(100).min(0).sub(100);
-            INDArray params = Nd4j.create(1, 1000,3,224,224);
+            INDArray input = Nd4j.rand(seed,inputsize,channels,height,width);//.max(100).min(0).sub(100);
+            INDArray params = Nd4j.create(1, outputNum,channels,height,width);
             model.setBackpropGradientsViewArray(Nd4j.create(1, params.length()));
             model.setInput(input);
             model.setLabels(label);
@@ -176,7 +177,7 @@ public class AlexNetTest {
             model.backpropGradient(epsilon);
             double start = System.nanoTime();
             for (int i = 0; i < backwardIterations; i++) {
-                model.backpropGradient(epsilon);//
+                model.backpropGradient(epsilon);
             }
             double end = System.nanoTime();
             double timeMillis = (end - start) / 1e6 /backwardIterations;
