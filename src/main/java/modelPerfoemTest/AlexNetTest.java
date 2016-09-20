@@ -5,6 +5,7 @@ import org.deeplearning4j.nn.conf.*;
 import org.deeplearning4j.nn.conf.distribution.GaussianDistribution;
 import org.deeplearning4j.nn.conf.distribution.NormalDistribution;
 import org.deeplearning4j.nn.conf.layers.*;
+
 import org.deeplearning4j.nn.conf.layers.BatchNormalization;
 import org.deeplearning4j.nn.conf.layers.LocalResponseNormalization;
 import org.deeplearning4j.nn.layers.normalization.*;
@@ -118,12 +119,12 @@ public class AlexNetTest {
                         .biasInit(nonZeroBias)
                         .dropOut(dropOut)
                         .build())
-                .layer(12, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
-                        .name("output")
-                        .nOut(outputNum)
-                        .activation("softmax")
-                        .build())
-                .backprop(true)
+                //.layer(12, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                //        .name("output")
+                //        .nOut(outputNum)
+                //        .activation("softmax")
+                //        .build())
+                //.backprop(true)
                 .pretrain(false)
                 .cnnInputSize(height, width, channels);
 
@@ -139,15 +140,18 @@ public class AlexNetTest {
     static int forwardIterations = 10;
     static int backwardIterations = 10;
     static MultiLayerNetwork model = init();
-    static INDArray label = Nd4j.rand(100,8,3,224,224);//.max(100).min(0);//
+    static INDArray label = Nd4j.rand(100,8);//.max(100).min(0);//
 
     public static void testForward(){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("dl4jPerformance.csv"), true))) {
             INDArray input = Nd4j.rand(100,8,3,224,224);//.max(100).min(0).sub(100);
             model.setInput(input);
+            model.setLabels(label);
             double start = System.nanoTime();
+            model.feedForward(input);
             for (int i = 0; i < forwardIterations; i++) {
-                model.preOutput(input);
+                //model.preOutput(input);
+                model.feedForward(input);
             }
             double end = System.nanoTime();
             double timeMillis = (end - start) / 1e6 /forwardIterations;
@@ -161,22 +165,25 @@ public class AlexNetTest {
     public  static void testBackward(){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("dl4jPerformance.csv"), true))) {
             INDArray input = Nd4j.rand(100,8,3,224,224);//.max(100).min(0).sub(100);
+            INDArray params = Nd4j.create(1, 1000,3,224,224);
+            model.setBackpropGradientsViewArray(Nd4j.create(1, params.length()));
             model.setInput(input);
+            model.setLabels(label);
             INDArray output = model.preOutput(input);
-            model.fit(input,output);
+            //model.fit(input,output);
 
-            INDArray epsilon = Nd4j.rand(100, 8,3,224,224);
+            INDArray epsilon = Nd4j.rand(100L, output.size(0), output.size(1));
+            model.backpropGradient(epsilon);
             double start = System.nanoTime();
             for (int i = 0; i < backwardIterations; i++) {
-                model.backpropGradient(epsilon);
+                model.backpropGradient(epsilon);//
             }
             double end = System.nanoTime();
             double timeMillis = (end - start) / 1e6 /backwardIterations;
 
-            writer.write("BatchNormalization backward, " + timeMillis + "\n");
+            writer.write("AlexNet backward, " + timeMillis + "\n");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
-
 }
