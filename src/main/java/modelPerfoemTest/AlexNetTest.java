@@ -160,6 +160,10 @@ public class AlexNetTest {
 
     public  static void testBackward(){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("dl4jPerformance.csv"), true))) {
+            INDArray input = Nd4j.rand(100,8,3,224,224);//.max(100).min(0).sub(100);
+            model.setInput(input);
+            INDArray output = model.preOutput(input);
+            model.fit(input,output);
 
             INDArray epsilon = Nd4j.rand(100, 8,3,224,224);
             double start = System.nanoTime();

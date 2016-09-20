@@ -8,7 +8,7 @@ import org.junit.Test;
 public class AlexNetPerformTest extends TestCase {
     @Test
     public void testAlex() {
-        AlexNetTest.testForward();
+        //AlexNetTest.testForward();
         AlexNetTest.testBackward();
     }
 }
