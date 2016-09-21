@@ -30,7 +30,7 @@ public class AlexNetTest {
     private static int channels = 3;
     private static int outputNum = 1000;
     private static long seed = 123;
-    private static int iterations = 90;
+    private static int iterations = 1;
 
     public AlexNetTest(int height, int width, int channels, int outputNum, long seed, int iterations) {
         this.height = height;
@@ -140,7 +140,7 @@ public class AlexNetTest {
     static int forwardIterations = 5;
     static int backwardIterations = 5;
     static MultiLayerNetwork model = init();
-    static int inputsize = 256;
+    static int inputsize = 128;
     static INDArray label = Nd4j.rand(seed,inputsize);//.max(100).min(0);//
 
     public static void testForward(){
@@ -148,11 +148,11 @@ public class AlexNetTest {
             INDArray input = Nd4j.rand(seed,inputsize,channels,height,width);//.max(100).min(0).sub(100);
             model.setInput(input);
             model.setLabels(label);
-            double start = System.nanoTime();
             model.feedForward(input);
+            double start = System.nanoTime();
             for (int i = 0; i < forwardIterations; i++) {
                 //model.preOutput(input);
-                model.feedForward(input);
+                model.fit(input);
             }
             double end = System.nanoTime();
             double timeMillis = (end - start) / 1e6 /forwardIterations;
