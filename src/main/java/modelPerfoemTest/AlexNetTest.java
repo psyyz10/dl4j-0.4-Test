@@ -12,9 +12,11 @@ import org.deeplearning4j.nn.layers.normalization.*;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.api.rng.DefaultRandom;
+import org.nd4j.linalg.api.rng.Random;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
-
+import org.deeplearning4j.eval.Evaluation;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -30,7 +32,7 @@ public class AlexNetTest {
     private static int channels = 3;
     private static int outputNum = 1000;
     private static long seed = 123;
-    private static int iterations = 90;
+    private static int iterations = 1;
 
     public AlexNetTest(int height, int width, int channels, int outputNum, long seed, int iterations) {
         this.height = height;
@@ -140,9 +142,10 @@ public class AlexNetTest {
     static int forwardIterations = 5;
     static int backwardIterations = 5;
     static MultiLayerNetwork model = init();
-    static int inputsize = 256;
-    static INDArray input = Nd4j.rand(seed,inputsize,channels,height,width);//.max(100).min(0).sub(100);
-    static INDArray label = Nd4j.rand(seed,inputsize);//.max(100).min(0);//
+    static int inputsize = 8;
+    static Random rng = new DefaultRandom(seed);
+    static INDArray input = Nd4j.rand(new int[]{inputsize,channels,height,width},0D,1D,rng);//(seed,inputsize,channels,height,width);//.max(100).min(0).sub(100);
+    static INDArray label = Nd4j.rand(new int[]{inputsize,outputNum},0,100,rng);
 
     public static void testForward(){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("dl4jPerformance.csv"), true))) {
@@ -152,18 +155,23 @@ public class AlexNetTest {
             double start = System.nanoTime();
             for (int i = 0; i < forwardIterations; i++) {
                 //model.preOutput(input);
-                model.fit(input);
+                model.fit(input,label);
             }
             double end = System.nanoTime();
             double timeMillis = (end - start) / 1e6 /forwardIterations;
 
             writer.write("AlexNet forward, " + timeMillis + "\n");
+
+           // Evaluation eval = new Evaluation(outputNum);
+           //     INDArray output = model.output(input);
+            //    eval.eval(label, output);
+           // writer.write(eval.stats());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    public  static void testBackward(){
+    public static void testBackward(){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("dl4jPerformance.csv"), true))) {
             //INDArray params = Nd4j.create(1, outputNum,channels,height,width);
             //model.setBackpropGradientsViewArray(Nd4j.create(1, params.length()));

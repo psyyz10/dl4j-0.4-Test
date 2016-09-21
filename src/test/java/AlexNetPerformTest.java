@@ -9,6 +9,6 @@ public class AlexNetPerformTest extends TestCase {
     @Test
     public void testAlex() {
         AlexNetTest.testForward();
-        AlexNetTest.testBackward();
+        //AlexNetTest.testBackward();
     }
 }
