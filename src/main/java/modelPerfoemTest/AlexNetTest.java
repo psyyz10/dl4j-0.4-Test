@@ -142,7 +142,7 @@ public class AlexNetTest {
     static int forwardIterations = 5;
     static int backwardIterations = 5;
     static MultiLayerNetwork model = init();
-    static int inputsize = 8;
+    static int inputsize = 256;
     static Random rng = new DefaultRandom(seed);
     static INDArray input = Nd4j.rand(new int[]{inputsize,channels,height,width},0D,1D,rng);//(seed,inputsize,channels,height,width);//.max(100).min(0).sub(100);
     static INDArray label = Nd4j.rand(new int[]{inputsize,outputNum},0,100,rng);

@@ -67,6 +67,6 @@ public class DL4JTest extends TestCase {
 
     @Test
     public void testMath() {
-        //new NDArrayMathTest().testMath();
+        new NDArrayMathTest().testMath();
     }
 }

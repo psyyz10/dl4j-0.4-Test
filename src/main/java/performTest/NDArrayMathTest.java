@@ -1,5 +1,7 @@
 package performTest;
 
+import org.nd4j.linalg.api.blas.BlasBufferUtil;
+import org.nd4j.linalg.api.buffer.DataBuffer;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 
@@ -8,6 +10,7 @@ import java.io.File;
 import java.io.FileWriter;
 
 import static performTest.NDArrayMathTest.Operation.*;
+import org.nd4j.linalg.ops.transforms.Transforms;
 
 /**
  * Created by yao on 9/11/16.
@@ -32,6 +35,9 @@ public class NDArrayMathTest {
     public NDArrayMathTest() {
 //        Nd4j.getRandom().setSeed(seed);
         matrixLargeLeft = Nd4j.rand(sizeLarge, sizeLarge);
+        if(matrixLargeLeft.data().dataType() == DataBuffer.Type.DOUBLE){
+            int a = 1;
+        }
         matrixLargeRight = Nd4j.rand(sizeLarge, sizeLarge);
         matrixLargeVec = Nd4j.rand(100L, sizeLarge);
         matrixMidLeft = Nd4j.rand(sizeMid, sizeMid);
@@ -40,7 +46,7 @@ public class NDArrayMathTest {
         matrixSmallLeft = Nd4j.rand(sizeSmall, sizeSmall);
         matrixSmallRight = Nd4j.rand(sizeSmall, sizeSmall);
         matrixSmallVec = Nd4j.rand(100L, sizeSmall);
-        scalar = 128;
+        scalar = 5;
     }
 
     public void testMatrixOperation(Operation opt, INDArray left, INDArray right, String printString, int iters) {
@@ -52,8 +58,12 @@ public class NDArrayMathTest {
                     case MINUS: left.sub(right);
                     case MULT: left.mmul(right);
                     case DIVID: left.div(right);
-                    case ADDMM: addMM(left, left, right);
-                    case ADDMV: addMV(scalar, left, right, left);
+                    case ADDMM: left.mmul(right);
+                    case ADDMV: left.mmul(right);
+                    case POW: Transforms.pow(left,scalar);
+                    case LOG: Transforms.log(left);
+                    case EXP: Transforms.exp(left);
+                    case SQRT: Transforms.sqrt(left);
                 }
             }
             double end = System.nanoTime();
@@ -62,14 +72,6 @@ public class NDArrayMathTest {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
-
-    public static INDArray addMM(INDArray res, INDArray mat1, INDArray mat2) {
-        return res.add(mat1.mmul(mat2));
-    }
-
-    public static INDArray addMV(int alpha, INDArray res, INDArray mat1, INDArray vec2) {
-        return res.add(mat1.mmul(vec2).mul(alpha));
     }
 
     public void testMath() {
@@ -91,9 +93,22 @@ public class NDArrayMathTest {
         testMatrixOperation(ADDMV, matrixLargeVec, matrixLargeRight, "4096 * 4096 matrix addmv operation", 10);
         testMatrixOperation(ADDMV, matrixMidVec, matrixMidRight, "512 * 512 matrix addmv operation", 30);
         testMatrixOperation(ADDMV, matrixSmallVec, matrixSmallRight, "32 * 32 matrix addmv operation", 30);
+        testMatrixOperation(POW, matrixLargeLeft, matrixLargeRight, "4096 * 4096 matrix add operation", 10);
+        testMatrixOperation(POW, matrixMidLeft, matrixMidRight, "512 * 512 matrix add operation", 30);
+        testMatrixOperation(POW, matrixSmallLeft, matrixSmallRight, "32 * 32 matrix add operation", 30);
+        testMatrixOperation(LOG, matrixLargeLeft, matrixLargeRight, "4096 * 4096 matrix add operation", 10);
+        testMatrixOperation(LOG, matrixMidLeft, matrixMidRight, "512 * 512 matrix add operation", 30);
+        testMatrixOperation(LOG, matrixSmallLeft, matrixSmallRight, "32 * 32 matrix add operation", 30);
+        testMatrixOperation(EXP, matrixLargeLeft, matrixLargeRight, "4096 * 4096 matrix add operation", 10);
+        testMatrixOperation(EXP, matrixMidLeft, matrixMidRight, "512 * 512 matrix add operation", 30);
+        testMatrixOperation(EXP, matrixSmallLeft, matrixSmallRight, "32 * 32 matrix add operation", 30);
+        testMatrixOperation(SQRT, matrixLargeLeft, matrixLargeRight, "4096 * 4096 matrix add operation", 10);
+        testMatrixOperation(SQRT, matrixMidLeft, matrixMidRight, "512 * 512 matrix add operation", 30);
+        testMatrixOperation(SQRT, matrixSmallLeft, matrixSmallRight, "32 * 32 matrix add operation", 30);
+
     }
 
     enum Operation{
-        ADD, MINUS, MULT, DIVID, ADDMM, ADDMV
+        ADD, MINUS, MULT, DIVID, ADDMM, ADDMV, POW, LOG, EXP, SQRT
     }
 }
