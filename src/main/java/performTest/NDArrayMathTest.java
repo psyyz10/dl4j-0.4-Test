@@ -51,6 +51,21 @@ public class NDArrayMathTest {
 
     public void testMatrixOperation(Operation opt, INDArray left, INDArray right, String printString, int iters) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("dl4jPerformance.csv"), true))) {
+            for (int i = 0; i < 10; i++) {
+                switch (opt) {
+                    case ADD: left.add(right);
+                    case MINUS: left.sub(right);
+                    case MULT: left.mmul(right);
+                    case DIVID: left.div(right);
+                    case ADDMM: left.mmul(right);
+                    case ADDMV: left.mmul(right);
+                    case POW: Transforms.pow(left,scalar);
+                    case LOG: Transforms.log(left);
+                    case EXP: Transforms.exp(left);
+                    case SQRT: Transforms.sqrt(left);
+                }
+            }
+
             double start = System.nanoTime();
             for (int i = 0; i < iters; i++) {
                 switch (opt) {
