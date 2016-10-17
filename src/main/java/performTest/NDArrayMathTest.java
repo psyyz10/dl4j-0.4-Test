@@ -32,19 +32,28 @@ public class NDArrayMathTest {
     static private int scalar;
 
 
+    private INDArray init(int length, float min, float max, float interval){
+        INDArray result = Nd4j.create(length,length);
+        float now = min;
+        int i=0;
+        for (;i< (length*length);i++){
+                if (now > max) now = min;
+                result.putScalar(i,now);
+                now = now+interval;
+        }
+        return result;
+    }
+
     public NDArrayMathTest() {
 //        Nd4j.getRandom().setSeed(seed);
-        matrixLargeLeft = Nd4j.rand(sizeLarge, sizeLarge);
-        if(matrixLargeLeft.data().dataType() == DataBuffer.Type.DOUBLE){
-            int a = 1;
-        }
-        matrixLargeRight = Nd4j.rand(sizeLarge, sizeLarge);
+        matrixLargeLeft = init(sizeLarge,-1000,1000,0.5f);
+        matrixLargeRight = init(sizeLarge,-1000,1000,0.5f);
         matrixLargeVec = Nd4j.rand(100L, sizeLarge);
-        matrixMidLeft = Nd4j.rand(sizeMid, sizeMid);
-        matrixMidRight = Nd4j.rand(sizeMid, sizeMid);
+        matrixMidLeft = init(sizeMid,-1000,1000,0.5f);
+        matrixMidRight = init(sizeMid,-1000,1000,0.5f);
         matrixMidVec = Nd4j.rand(100L, sizeMid);
-        matrixSmallLeft = Nd4j.rand(sizeSmall, sizeSmall);
-        matrixSmallRight = Nd4j.rand(sizeSmall, sizeSmall);
+        matrixSmallLeft = init(sizeSmall,-500,500,1);
+        matrixSmallRight = init(sizeSmall,-500,500,1);
         matrixSmallVec = Nd4j.rand(100L, sizeSmall);
         scalar = 5;
     }
