@@ -17,8 +17,8 @@ import org.nd4j.linalg.ops.transforms.Transforms;
  */
 public class NDArrayMathTest {
     static long seed = 100L;
-    static int sizeLarge = 40;
-    static int sizeMid = 51;
+    static int sizeLarge = 4096;
+    static int sizeMid = 512;
     static int sizeSmall = 32;
     static private INDArray matrixLargeLeft;
     static private INDArray matrixLargeRight;
@@ -105,36 +105,36 @@ public class NDArrayMathTest {
     }
 
     public void testMath() {
-        testMatrixOperation(POW, matrixLargeLeft, matrixLargeRight, matrixLargeResult, "4096 * 4096 matrix pow operation", 100);
+        testMatrixOperation(POW, matrixLargeLeft, matrixLargeRight, matrixLargeResult, "4096 * 4096 matrix pow operation", 10);
         testMatrixOperation(POW, matrixMidLeft, matrixMidRight, matrixMidResult, "512 * 512 matrix pow operation", 1000);
-        testMatrixOperation(POW, matrixSmallLeft, matrixSmallRight, matrixSmallResult, "32 * 32 matrix pow operation", 100000);
-        testMatrixOperation(LOG, matrixLargeLeft, matrixLargeRight, matrixLargeResult, "4096 * 4096 matrix log operation", 100);
+        testMatrixOperation(POW, matrixSmallLeft, matrixSmallRight, matrixSmallResult, "32 * 32 matrix pow operation", 10000);
+        testMatrixOperation(LOG, matrixLargeLeft, matrixLargeRight, matrixLargeResult, "4096 * 4096 matrix log operation", 10);
         testMatrixOperation(LOG, matrixMidLeft, matrixMidRight, matrixMidResult, "512 * 512 matrix log operation", 1000);
-        testMatrixOperation(LOG, matrixSmallLeft, matrixSmallRight, matrixSmallResult, "32 * 32 matrix log operation", 100000);
-        testMatrixOperation(EXP, matrixLargeLeft, matrixLargeRight, matrixLargeResult, "4096 * 4096 matrix exp operation", 100);
+        testMatrixOperation(LOG, matrixSmallLeft, matrixSmallRight, matrixSmallResult, "32 * 32 matrix log operation", 10000);
+        testMatrixOperation(EXP, matrixLargeLeft, matrixLargeRight, matrixLargeResult, "4096 * 4096 matrix exp operation", 10);
         testMatrixOperation(EXP, matrixMidLeft, matrixMidRight, matrixMidResult, "512 * 512 matrix exp operation", 1000);
-        testMatrixOperation(EXP, matrixSmallLeft, matrixSmallRight, matrixSmallResult, "32 * 32 matrix exp operation", 100000);
-        testMatrixOperation(SQRT, matrixLargeLeft, matrixLargeRight, matrixLargeResult, "4096 * 4096 matrix sqrt operation", 100);
+        testMatrixOperation(EXP, matrixSmallLeft, matrixSmallRight, matrixSmallResult, "32 * 32 matrix exp operation", 10000);
+        testMatrixOperation(SQRT, matrixLargeLeft, matrixLargeRight, matrixLargeResult, "4096 * 4096 matrix sqrt operation", 10);
         testMatrixOperation(SQRT, matrixMidLeft, matrixMidRight, matrixMidResult, "512 * 512 matrix sqrt operation", 1000);
-        testMatrixOperation(SQRT, matrixSmallLeft, matrixSmallRight, matrixSmallResult, "32 * 32 matrix sqrt operation", 100000);
-        testMatrixOperation(ADD, matrixLargeLeft, matrixLargeRight, matrixLargeResult, "4096 * 4096 matrix add operation", 100);
+        testMatrixOperation(SQRT, matrixSmallLeft, matrixSmallRight, matrixSmallResult, "32 * 32 matrix sqrt operation", 10000);
+        testMatrixOperation(ADD, matrixLargeLeft, matrixLargeRight, matrixLargeResult, "4096 * 4096 matrix add operation", 10);
         testMatrixOperation(ADD, matrixMidLeft, matrixMidRight, matrixMidResult, "512 * 512 matrix add operation", 1000);
-        testMatrixOperation(ADD, matrixSmallLeft, matrixSmallRight, matrixSmallResult, "32 * 32 matrix add operation", 100000);
-        testMatrixOperation(MINUS, matrixLargeLeft, matrixLargeRight, matrixLargeResult, "4096 * 4096 matrix minus operation", 100);
+        testMatrixOperation(ADD, matrixSmallLeft, matrixSmallRight, matrixSmallResult, "32 * 32 matrix add operation", 10000);
+        testMatrixOperation(MINUS, matrixLargeLeft, matrixLargeRight, matrixLargeResult, "4096 * 4096 matrix minus operation", 10);
         testMatrixOperation(MINUS, matrixMidLeft, matrixMidRight, matrixMidResult, "512 * 512 matrix minus operation", 1000);
-        testMatrixOperation(MINUS, matrixSmallLeft, matrixSmallRight, matrixSmallResult, "32 * 32 matrix minus operation", 100000);
-        testMatrixOperation(MULT, matrixLargeLeft, matrixLargeRight, matrixLargeResult, "4096 * 4096 matrix multiply operation", 100);
+        testMatrixOperation(MINUS, matrixSmallLeft, matrixSmallRight, matrixSmallResult, "32 * 32 matrix minus operation", 10000);
+        testMatrixOperation(MULT, matrixLargeLeft, matrixLargeRight, matrixLargeResult, "4096 * 4096 matrix multiply operation", 10);
         testMatrixOperation(MULT, matrixMidLeft, matrixMidRight, matrixMidResult, "512 * 512 matrix multiply operation", 1000);
-        testMatrixOperation(MULT, matrixSmallLeft, matrixSmallRight, matrixSmallResult, "32 * 32 matrix multiply operation", 100000);
-        testMatrixOperation(DIVID, matrixLargeLeft, matrixLargeRight, matrixLargeResult, "4096 * 4096 matrix divide operation", 100);
+        testMatrixOperation(MULT, matrixSmallLeft, matrixSmallRight, matrixSmallResult, "32 * 32 matrix multiply operation", 10000);
+        testMatrixOperation(DIVID, matrixLargeLeft, matrixLargeRight, matrixLargeResult, "4096 * 4096 matrix divide operation", 10);
         testMatrixOperation(DIVID, matrixMidLeft, matrixMidRight, matrixMidResult, "512 * 512 matrix divide operation", 1000);
-        testMatrixOperation(DIVID, matrixSmallLeft, matrixSmallRight, matrixSmallResult, "32 * 32 matrix divide operation", 100000);
-        testMatrixOperation(ADDMM, matrixLargeLeft, matrixLargeRight, matrixLargeResult, "4096 * 4096 matrix addmm operation", 100);
+        testMatrixOperation(DIVID, matrixSmallLeft, matrixSmallRight, matrixSmallResult, "32 * 32 matrix divide operation", 10000);
+        testMatrixOperation(ADDMM, matrixLargeLeft, matrixLargeRight, matrixLargeResult, "4096 * 4096 matrix addmm operation", 10);
         testMatrixOperation(ADDMM, matrixMidLeft, matrixMidRight, matrixMidResult, "512 * 512 matrix addmm operation", 1000);
-        testMatrixOperation(ADDMM, matrixSmallLeft, matrixSmallRight, matrixSmallResult, "32 * 32 matrix addmm operation", 100000);
-        testMatrixOperation(ADDMV, matrixLargeVec, matrixLargeRight, matrixLargeVec, "4096 * 4096 matrix addmv operation", 100);
+        testMatrixOperation(ADDMM, matrixSmallLeft, matrixSmallRight, matrixSmallResult, "32 * 32 matrix addmm operation", 10000);
+        testMatrixOperation(ADDMV, matrixLargeVec, matrixLargeRight, matrixLargeVec, "4096 * 4096 matrix addmv operation", 10);
         testMatrixOperation(ADDMV, matrixMidVec, matrixMidRight, matrixMidVec, "512 * 512 matrix addmv operation", 1000);
-        testMatrixOperation(ADDMV, matrixSmallVec, matrixSmallRight, matrixSmallVec, "32 * 32 matrix addmv operation", 100000);
+        testMatrixOperation(ADDMV, matrixSmallVec, matrixSmallRight, matrixSmallVec, "32 * 32 matrix addmv operation", 10000);
     }
 
     enum Operation{
