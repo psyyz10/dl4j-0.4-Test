@@ -64,6 +64,7 @@ public class DL4JTest extends TestCase {
 //        DropoutTest.testBackward();
 //    }
 
+
     @Test
     public void testMath() {
         new NDArrayMathTest().testMath();

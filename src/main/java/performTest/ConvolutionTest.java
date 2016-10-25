@@ -166,6 +166,7 @@ public class ConvolutionTest {
             }
         }
     }
+
     public static void main(String[] args) {
         testAccuracy();
         testForward();
